@@ -5,7 +5,7 @@ def Math_operations(x, y):
 
     '''
     math_operations function takes two integers parameters
-    user input is taken as x and y
+    use of user input is initiated
     uses lambda fuction to calculate sum, product, quotient and difference of the numbers
     lambda arguments : expression
     lambda functions can take any number of arguments
