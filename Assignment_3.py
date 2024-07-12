@@ -1,15 +1,15 @@
 def Math_operations(x, y):
+    '''
+    Math_operations function takes two integers parameters
+    User_input is taken as x and y
+    Lambda fuction calculates sum, product, quotient and difference of 'x' & 'y'. Lambda functions can take any number of arguments
+    lambda arguments : expression
+    Return function is use to return the results of sum, product, quotient and difference of 'x' & 'y'
+    main function prints results of Math_operations
+   '''
     x = int(input(f"Enter the value of x: "))
 
     y = float(input(f"Enter the value of y: "))
-
-    '''
-    math_operations function takes two integers parameters
-    user input is taken as x and y
-    uses lambda fuction to calculate sum, product, quotient and difference of the numbers
-    lambda arguments : expression
-    lambda functions can take any number of arguments
-   '''
 
     mySum = lambda x, y : x + y
 
@@ -18,7 +18,7 @@ def Math_operations(x, y):
     myQuotient = lambda  x, y : x / y
 
     myDifference = lambda  x, y : x - y
-    #Return function
+
     return{
     "sum" : mySum(x, y),
     "product" : myProduct(x, y),
