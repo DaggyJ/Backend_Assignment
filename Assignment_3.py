@@ -7,7 +7,6 @@ def Math_operations(x, y):
     Return function is use to return the results of sum, product, quotient and difference of 'x' & 'y'
     main function prints results of math_oparetions
    '''
-
     mySum = lambda x, y : x + y
     myProduct = lambda  x, y : x * y
     myQuotient = lambda  x, y : x / y
