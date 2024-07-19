@@ -6,7 +6,7 @@ def Math_operations(x, y):
    '''
     mySum = lambda x, y : x + y
     myProduct = lambda  x, y : x * y
-
+    
     return{
     "sum" : mySum(x, y),
     "product" : myProduct(x, y),
