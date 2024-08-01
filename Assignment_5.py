@@ -54,8 +54,7 @@ def updateProduct(name, newQuantity, price):
     except FileNotFoundError:
         print(f"Error: '{filePath}' not found.")
     except csv.Error as e:
-        print(f"Error writing '{filePath}': {e}")
-    
+        print(f"Error writing '{filePath}': {e}")  
 
 def deleteProduct(name):
     try:
@@ -69,7 +68,7 @@ def deleteProduct(name):
             writer = csv.DictWriter(file, fieldnames=['name', 'quantity', 'price'])
             writer.writeheader()
             writer.writerows(rows)
-        print(f"Deleted product '{name}'.")
+        print(f"'{name}' Deleted successivelly.")
     except FileNotFoundError:
         print(f"Error: '{filePath}' not found.")
     except csv.Error as e:
@@ -93,11 +92,17 @@ def main():
             price = int(input("Enter amount: Ksh."))
             addProducts(name, quantity, price)
         elif choice == '3':
-            name = input("Enter product name to update: ")
-
-            newQuantity = int(input("Enter new product quantity: "))
-            price = int(input("Enter amount: Ksh."))
-            updateProduct(name, newQuantity, price)
+            try:
+                name = input("Enter product name to update: ")
+           
+                newQuantity = int(input("Enter new product quantity: "))
+                price = int(input("Enter amount: Ksh."))
+                updateProduct(name, newQuantity, price)
+            except:
+                print('Product not found! Try Again!')  
+                
+                
+                 
         elif choice == '4':
             name = input("Enter product name to delete: ")
             deleteProduct(name)
