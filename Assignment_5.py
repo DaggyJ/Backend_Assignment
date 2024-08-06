@@ -103,7 +103,7 @@ def main():
         elif choice == '3':
             name = input("Enter product name to update: ")
             newQuantity = int(input("Enter new product quantity: "))
-            newPrice = int(input("Enter new product price: Ksh. "))
+            newPrice = float(input("Enter new product price: Ksh. "))
             updateProduct(name, newQuantity, newPrice)
         elif choice == '4':
             name = input("Enter product name to delete: ")
