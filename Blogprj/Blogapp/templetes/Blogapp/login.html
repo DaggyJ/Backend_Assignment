@@ -2,17 +2,15 @@
 {% block content %}
 
 <div class="header-bar">
-    <a href="{% url 'task' %}">&#8592; Back</a>
-    <h1>Task Form</h1>
-    <br>
-
+    <h1>Login</h1>
 </div>
+
 <div class="card-body">
     <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input class="button" type="submit" value="Save Task">
+        <input class="button" type="submit" value="Login Now">
+        <small><p>Don't have an account yet?<a href="{% url 'register' %}">Register New Account</a></p></small>
     </form>
 </div>
-
 {% endblock content %}
