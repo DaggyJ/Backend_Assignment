@@ -9,50 +9,47 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import Task
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 class TaskList(LoginRequiredMixin, ListView):
     model = Task
     context_object_name = 'task'
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #context['task'] = context['task'].filter(user=self.request.user)
+        # Context to count incomplete tasks
         context['count'] = context['task'].filter(complete=False).count()
 
-        search_input = self.request.GET.get('search area') or ''
+        search_input = self.request.GET.get('search_area') or ''  # Updated search parameter name
         if search_input:
-            context['task'] = context['task'].filter(title__icontains = search_input)
+            context['task'] = context['task'].filter(title__icontains=search_input)
             context['search_input'] = search_input
         return context
-
 
 class TaskDetail(LoginRequiredMixin, DetailView):
     model = Task
     context_object_name = 'task'
-  
+    paginate_by = 4  # Number of items per page
 
 class TaskCreate(LoginRequiredMixin, CreateView):
-     model = Task
-     fields = ['title', 'description', 'complete']
-     success_url = reverse_lazy('task')
-
-        
-
+    model = Task
+    fields = ['title', 'description', 'complete']
+    success_url = reverse_lazy('task')
 
 class TaskUpdate(LoginRequiredMixin, UpdateView):
     model = Task
     fields = ['title', 'description', 'complete']
     success_url = reverse_lazy('task')
 
-
 class TaskDelete(LoginRequiredMixin, DeleteView):
     model = Task
     context_object_name = 'task'
     success_url = reverse_lazy('task')
 
-class CustomLonginView(LoginView):
-    template_name ='Blogapp/login.html'
-    fields = ['title', 'description', 'complete']
+class CustomLoginView(LoginView):
+    template_name = 'Blogapp/login.html'
     redirect_authenticated_user = False
 
     def get_success_url(self):
