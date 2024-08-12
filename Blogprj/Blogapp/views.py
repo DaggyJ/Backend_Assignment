@@ -15,10 +15,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 class TaskList(LoginRequiredMixin, ListView):
     model = Task
     context_object_name = 'task'
-    
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
+        
         context = super().get_context_data(**kwargs)
+        
         # Context to count incomplete tasks
         context['count'] = context['task'].filter(complete=False).count()
 
@@ -26,13 +28,16 @@ class TaskList(LoginRequiredMixin, ListView):
         if search_input:
             context['task'] = context['task'].filter(title__icontains=search_input)
             context['search_input'] = search_input
+
+
+
         return context
 
 class TaskDetail(LoginRequiredMixin, DetailView):
     model = Task
-    context_object_name = 'task'
     paginate_by = 4  # Number of items per page
-
+    context_object_name = 'task'
+   
 class TaskCreate(LoginRequiredMixin, CreateView):
     model = Task
     fields = ['title', 'description', 'complete']
