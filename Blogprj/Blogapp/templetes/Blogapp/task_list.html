@@ -48,23 +48,21 @@
 </div>
 <br>
 <!-- Pagination controls -->
- <div>
-    page{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
- </div>
+
 <center>
-    <ul>
+   
     {% if page_obj.has_previous %}
-       <li><a href="?page=1">&laquo; First</a></li> 
-        <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+      <a href="?page=1">&laquo; First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
     {% endif %}
 
-    <!--span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span-->
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
 
     {% if page_obj.has_next %}
-        <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
-        <li><a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+       <a href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
     {% endif %}
-    </ul>
+
 </center>
 <br>
 <br>
