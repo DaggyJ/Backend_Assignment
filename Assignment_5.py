@@ -1,26 +1,62 @@
 import os
 import csv
+import logging
+from datetime import datetime
 
 filePath = 'Store.csv'
+backupPath = 'Backup_Store.csv'
+
+# To check user logs throughout the program.
+logging.basicConfig(filename='store_log.txt', level=logging.INFO, 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 def createCSV():
     if not os.path.exists(filePath):
         with open(filePath, 'w', newline='') as file:
             writer = csv.writer(file)
-            header = ['name', 'quantity', 'price']
+            header = ['name', 'quantity', 'price', 'expiry_date']
             writer.writerow(header)
             print("CSV file created.")
+            logging.info("CSV file created.")
     else:
         print(f"Found existing '{filePath}'.")
+        logging.info(f"Found existing '{filePath}'.")
 
-def addProduct(name, quantity, price):
+def productExists(name):
+    try:
+        with open(filePath, 'r', newline='') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row['name'].lower() == name.lower():
+                    return True
+        return False
+    except FileNotFoundError:
+        print(f"Error: '{filePath}' not found.")
+        logging.error(f"Error: '{filePath}' not found.")
+        return False
+
+def addProduct(name, quantity, price, expiry_date):
+    if quantity < 0 or price < 0:
+        print("Quantity and price must be non-negative.")
+        return
+
+    if not name.strip():
+        print("Product name cannot be empty.")
+        return
+
+    if productExists(name):
+        print(f"Product '{name}' already exists.")
+        return
+
     try:
         with open(filePath, 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([name, quantity, price])
-        print(f"'{name}' '{quantity}kg' @ 'Ksh.{price}' Added successively.")
+            writer.writerow([name, quantity, price, expiry_date])
+        print(f"'{name}' '{quantity}kg' @ 'Ksh.{price}' added successfully.")
+        logging.info(f"Product '{name}' added successfully.")
     except csv.Error as e:
         print(f"Error writing to '{filePath}': {e}")
+        logging.error(f"Error writing to '{filePath}': {e}")
 
 def readProducts():
     try:
@@ -28,36 +64,49 @@ def readProducts():
             reader = csv.DictReader(file)
             print("\n========== Current Products ==========\n")
             for row in reader:
-                print(f"{row['name']:15} {row['quantity']:3}kg  Ksh.{row['price']}")
+                print(f"{row['name']:15} {row['quantity']:3}kg  Ksh.{row['price']} Exp: {row['expiry_date']}")
+        logging.info("Products viewed successfully.")
     except FileNotFoundError:
         print(f"Error: '{filePath}' not found")
+        logging.error(f"Error: '{filePath}' not found")
     except csv.Error as e:
         print(f"Error reading '{filePath}': {e}")
+        logging.error(f"Error reading '{filePath}': {e}")
 
-def updateProduct(name, newQuantity, newPrice):
+def updateProduct(name, newQuantity, newPrice, newExpiryDate):
+    if not productExists(name):
+        print(f"Product '{name}' not found in your store.")
+        logging.warning(f"Product '{name}' not found in your store.")
+        return
+
     try:
+        if newQuantity < 0 or newPrice < 0:
+            print("Quantity and price must be non-negative.")
+            return
+
         rows = []
-        found = False
         with open(filePath, 'r', newline='') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                if row['name'] == name:
+                if row['name'].lower() == name.lower():
                     row['quantity'] = newQuantity
                     row['price'] = newPrice
-                    found = True
+                    row['expiry_date'] = newExpiryDate
                 rows.append(row)
-        if found:
-            with open(filePath, 'w', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=['name', 'quantity', 'price'])
-                writer.writeheader()
-                writer.writerows(rows)
-            print(f"'{name}' '{newQuantity}kg' for 'Ksh.{newPrice}' Updated successively.")
-        else:
-            print(f"Product '{name}' not found.")
+
+        with open(filePath, 'w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=['name', 'quantity', 'price', 'expiry_date'])
+            writer.writeheader()
+            writer.writerows(rows)
+
+        print(f"'{name}' '{newQuantity}kg' for 'Ksh.{newPrice}' updated successfully.")
+        logging.info(f"Product '{name}' updated successfully.")
     except FileNotFoundError:
         print(f"Error: '{filePath}' not found in your store.")
+        logging.error(f"Error: '{filePath}' not found in your store.")
     except csv.Error as e:
         print(f"Error writing to '{filePath}': {e}")
+        logging.error(f"Error writing to '{filePath}': {e}")
 
 def deleteProduct(name):
     try:
@@ -66,22 +115,42 @@ def deleteProduct(name):
         with open(filePath, 'r', newline='') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                if row['name'] != name:
+                if row['name'].lower() != name.lower():
                     rows.append(row)
                 else:
                     found = True
         if found:
             with open(filePath, 'w', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=['name', 'quantity', 'price'])
+                writer = csv.DictWriter(file, fieldnames=['name', 'quantity', 'price', 'expiry_date'])
                 writer.writeheader()
                 writer.writerows(rows)
-            print(f"'{name}' Deleted successivelly.")
+            print(f"'{name}' deleted successfully.")
+            logging.info(f"Product '{name}' deleted successfully.")
         else:
             print(f"Product '{name}' not found in your store.")
+            logging.warning(f"Product '{name}' not found in your store.")
     except FileNotFoundError:
         print(f"Error: '{filePath}' not found.")
+        logging.error(f"Error: '{filePath}' not found.")
     except csv.Error as e:
         print(f"Error writing to '{filePath}': {e}")
+        logging.error(f"Error writing to '{filePath}': {e}")
+
+def backupCSV():
+    try:
+        with open(filePath, 'r') as original_file:
+            with open(backupPath, 'w', newline='') as backup_file:
+                writer = csv.writer(backup_file)
+                for line in original_file:
+                    backup_file.write(line)
+        print(f"Backup created at '{backupPath}'.")
+        logging.info(f"Backup created at '{backupPath}'.")
+    except FileNotFoundError:
+        print(f"Error: '{filePath}' not found.")
+        logging.error(f"Error: '{filePath}' not found.")
+    except Exception as e:
+        print(f"Error during backup: {e}")
+        logging.error(f"Error during backup: {e}")
 
 def main():
     createCSV()
@@ -91,28 +160,50 @@ def main():
         print("2. Add Product")
         print("3. Update Product")
         print("4. Delete Product")
-        print("5. Exit")
+        print("5. Backup Data")
+        print("6. Exit")
         choice = input("Enter your choice: ")
         if choice == '1':
             readProducts()
         elif choice == '2':
             name = input("Enter product name: ")
-            quantity = int(input("Enter product quantity: "))
-            price = int(input("Enter product price: Ksh. "))
-            addProduct(name, quantity, price)
+            if not name.strip():
+                print("Product name cannot be empty.")
+                continue
+            try:
+                quantity = int(input("Enter product quantity: "))
+                price = float(input("Enter product price: Ksh. "))
+                expiry_date = input("Enter product expiry date (YYYY-MM-DD): ")
+                # Validate date format
+                datetime.strptime(expiry_date, '%Y-%m-%d')
+                addProduct(name, quantity, price, expiry_date)
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+                continue
         elif choice == '3':
             name = input("Enter product name to update: ")
-            newQuantity = int(input("Enter new product quantity: "))
-            newPrice = float(input("Enter new product price: Ksh. "))
-            updateProduct(name, newQuantity, newPrice)
+            if not productExists(name):
+                print(f"Product '{name}' not found.")
+                continue
+            try:
+                newQuantity = int(input("Enter new product quantity: "))
+                newPrice = float(input("Enter new product price: Ksh. "))
+                newExpiryDate = input("Enter new product expiry date (YYYY-MM-DD): ")
+                # Validate date format
+                datetime.strptime(newExpiryDate, '%Y-%m-%d')
+                updateProduct(name, newQuantity, newPrice, newExpiryDate)
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+                continue
         elif choice == '4':
             name = input("Enter product name to delete: ")
             deleteProduct(name)
         elif choice == '5':
-            print("Exiting the program")
+            backupCSV()
+        elif choice == '6':
             break
         else:
-            print("Invalid choice. Try Again.")
+            print("Invalid choice. Please try again.")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
