@@ -1,0 +1,13 @@
+2024-09-07 05:46:32,170 - INFO - Product 'Maize' added successfully.
+2024-09-07 05:47:00,118 - INFO - Product 'Beans' added successfully.
+2024-09-07 05:47:38,517 - INFO - Product 'Soyabeans' added successfully.
+2024-09-07 05:48:03,708 - INFO - Product 'Wheat' added successfully.
+2024-09-07 05:48:42,041 - INFO - Product 'Rice' added successfully.
+2024-09-07 05:49:26,668 - INFO - Product 'Njahi' added successfully.
+2024-09-07 05:49:30,446 - INFO - Products viewed successfully.
+2024-09-07 05:55:59,414 - INFO - Backup created at 'Backup_Store.csv'.
+2024-09-07 05:56:49,871 - INFO - Found existing 'Store.csv'.
+2024-09-07 05:56:56,787 - INFO - Products viewed successfully.
+2024-09-07 05:57:39,428 - INFO - Product 'gg' added successfully.
+2024-09-07 05:59:59,896 - INFO - Product 'gg' updated successfully.
+2024-09-07 06:00:05,804 - INFO - Product 'gg' deleted successfully.
