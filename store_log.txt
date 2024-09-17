@@ -11,3 +11,9 @@
 2024-09-07 05:57:39,428 - INFO - Product 'gg' added successfully.
 2024-09-07 05:59:59,896 - INFO - Product 'gg' updated successfully.
 2024-09-07 06:00:05,804 - INFO - Product 'gg' deleted successfully.
+2024-09-17 13:18:31,391 - INFO - Found existing 'Store.csv'.
+2024-09-17 13:18:38,579 - INFO - Products viewed successfully.
+2024-09-17 13:19:17,154 - INFO - Product 'bread' added successfully.
+2024-09-17 13:19:49,202 - INFO - Product 'bread' updated successfully.
+2024-09-17 13:20:03,176 - INFO - Product 'bread' deleted successfully.
+2024-09-17 13:20:07,180 - INFO - Backup created at 'Backup_Store.csv'.
